@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>WinTrace · Windows attack timeline</title>
+  <meta name="description" content="Drop Windows event logs (.evtx, XML, JSON) and see the attack: brute force, Kerberoasting, pass-the-hash, Mimikatz, DCSync, persistence and log clearing, as a timeline mapped to MITRE ATT&CK. Runs 100% in your browser.">
+  <meta property="og:title" content="WinTrace · Find the attack in your Windows logs">
+  <meta property="og:description" content="Windows event log analyzer for SOC analysts. Own EVTX parser, 30+ detections, MITRE ATT&CK. Runs 100% in your browser.">
+  <meta property="og:image" content="https://vicuvi1.github.io/wintrace/docs/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="assets/app.css">
+  <script src="assets/theme.js"></script>
+  <script type="module" src="assets/app.js"></script>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="./" id="home" aria-label="WinTrace home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Win<b>Trace</b></span></a>
+    <span class="pill-ok" title="Logs are parsed by JavaScript on this page and never uploaded.">
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Zm-1.2 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.9-4.9 1.4 1.4-6.3 6.3Z"/></svg>
+      Logs never leave your browser
+    </span>
+    <nav class="topnav">
+      <a href="#how" class="hide-sm">How it works</a>
+      <a href="https://github.com/vicuvi1/wintrace" target="_blank" rel="noopener">GitHub</a>
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle light/dark theme"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/></svg></button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="landing" class="view">
+      <div class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="dot"></span>Windows event log analyzer for SOC analysts</p>
+          <h1>Find the attack in your <span class="grad">Windows logs.</span></h1>
+          <p class="lead">Drop <b>.evtx</b> files straight from a machine (or XML / JSON exports). WinTrace rebuilds what the attacker did, step by step: brute force, Kerberoasting, pass-the-hash, Mimikatz, DCSync, persistence and log wiping, all mapped to MITRE ATT&amp;CK.</p>
+          <ul class="hero-points">
+            <li><b>Own EVTX parser</b>: binary Windows logs decoded in the browser</li>
+            <li><b>30+ detections</b> across Security, System, Sysmon, PowerShell, Defender</li>
+            <li><b>Attack story</b>: a plain-English timeline anyone can follow</li>
+          </ul>
+        </div>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Drop log files or click to choose">
+          <div class="drop-ico" aria-hidden="true">
+            <svg viewBox="0 0 64 64" width="64" height="64"><rect x="10" y="8" width="36" height="46" rx="5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M18 20h20M18 28h20M18 36h12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="44" cy="44" r="10" fill="var(--bg)" stroke="var(--accent)" stroke-width="2.6"/><path d="m51 51 6 6" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg>
+          </div>
+          <p class="drop-title">Drop Windows logs here</p>
+          <p class="drop-sub">.evtx · Event Viewer XML · Winlogbeat / JSON<br>Several files from one host are merged into one timeline</p>
+          <div class="drop-actions"><button class="btn primary" id="choose" type="button">Choose files</button><button class="btn ghost" id="trySample" type="button">Try an attack sample</button></div>
+          <input type="file" id="file" multiple accept=".evtx,.xml,.json,.jsonl,.ndjson,.txt" hidden>
+          <p class="drop-hint">Find them in <code>C:\Windows\System32\winevt\Logs\</code> (Security.evtx, System.evtx, Microsoft-Windows-Sysmon%4Operational.evtx)</p>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="section-head"><h2>Attack samples</h2><p>Seven synthetic incidents built on the real Windows event schemas. One of them is a normal day, to prove it stays quiet.</p></div>
+        <div class="samples" id="samples"></div>
+      </section>
+
+      <section class="section" id="how">
+        <div class="section-head"><h2>How it works</h2><p>Everything runs in this tab. Nothing is uploaded, and the logs are only ever read.</p></div>
+        <ol class="steps">
+          <li><b>Parse</b><span>EVTX chunks, Binary XML templates and substitutions decoded by hand. Tested record-for-record against python-evtx.</span></li>
+          <li><b>Normalize</b><span>Security, System, Sysmon, PowerShell, Defender, RDP and Task Scheduler events become one timeline.</span></li>
+          <li><b>Detect</b><span>Single-event rules plus correlations over time: brute force → success, spray, Kerberoast bursts, backdoor admins.</span></li>
+          <li><b>Explain</b><span>Risk score, attack story, ATT&amp;CK matrix, entities, Markdown report and ATT&amp;CK Navigator layer.</span></li>
+        </ol>
+        <div class="detects" id="detects"></div>
+      </section>
+    </section>
+
+    <section id="results" class="view" hidden></section>
+  </main>
+
+  <footer class="footer">Built by <a href="https://victor-barbuta.vercel.app" target="_blank" rel="noopener">Victor Bărbuță</a> · <a href="https://github.com/vicuvi1/wintrace" target="_blank" rel="noopener">Source on GitHub</a> · MIT · Samples are synthetic</footer>
+
+  <div class="overlay" id="dropOverlay" hidden><div>Drop to analyse</div></div>
+  <div class="overlay" id="busy" hidden><div class="busy-card"><div class="spin" aria-hidden="true"></div><p id="busyText">Parsing logs…</p></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

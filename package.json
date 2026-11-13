@@ -1,0 +1,12 @@
+{
+  "name": "wintrace",
+  "version": "1.0.0",
+  "description": "Windows event log attack hunter: own EVTX parser, 30+ detections (brute force, Kerberoasting, pass-the-hash, Mimikatz, DCSync, persistence), attack timeline and MITRE ATT&CK mapping. Runs in the browser or as a CLI.",
+  "type": "module",
+  "private": true,
+  "bin": { "wintrace": "cli.js" },
+  "scripts": { "test": "node --test", "start": "node tools/serve.js", "samples": "node cli.js --separate samples/*.xml" },
+  "engines": { "node": ">=20" },
+  "author": "Victor Barbuta",
+  "license": "MIT"
+}

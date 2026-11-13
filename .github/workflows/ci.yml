@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: node --test
+      - name: CLI smoke test (attack must trip the gate, the clean day must not)
+        run: |
+          node cli.js --separate samples/*.xml
+          node cli.js test/fixtures/system.evtx test/fixtures/security.evtx
+          node cli.js samples/07-normal-workday-clean.xml --fail-above 0
+          if node cli.js samples/05-dcsync-ntds-theft.xml --fail-above 49; then echo "gate did not trip"; exit 1; fi
+          node cli.js samples/03-phishing-macro-mimikatz-lsass.xml --navigator | node -e "JSON.parse(require('fs').readFileSync(0,'utf8'))"

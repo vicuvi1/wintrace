@@ -1,0 +1,5 @@
+* text=auto
+*.evtx binary
+*.png binary
+*.yml text eol=lf
+*.sh text eol=lf
