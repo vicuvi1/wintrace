@@ -14,7 +14,7 @@ Drop Windows event logs (`.evtx` straight from a machine, or XML / JSON exports)
 ![Privacy](https://img.shields.io/badge/logs-never%20leave%20your%20browser-34d399)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-![WinTrace attack story for an RDP brute force that ends in ransomware preparation](docs/story.png)
+![WinTrace demo: an RDP brute force rebuilt as an attack story, then the detections and the ATT&CK matrix](docs/demo.gif)
 
 </div>
 
@@ -45,9 +45,10 @@ Sources: Security, System, Sysmon, PowerShell Operational, Windows Defender, RDP
 
 | | |
 |---|---|
-| ![Detections](docs/detections.png) **Detections**, with the encoded PowerShell decoded | ![MITRE](docs/mitre.png) **ATT&CK matrix**, coloured by worst severity |
-| ![Timeline](docs/timeline.png) **Timeline**: search, filter, expand any event's raw fields | ![Entities](docs/entities.png) **Accounts, hosts and IPs**: who failed, who got in |
-| ![Kerberoasting](docs/kerberoast.png) **Kerberoasting and AS-REP roasting** on a domain controller | ![Clean](docs/clean.png) **A normal workday** stays at 0/100: no false alarms |
+| ![Attack story](docs/story.png) **Attack story**: an RDP brute force that ends in ransomware preparation | ![Detections](docs/detections.png) **Detections**, with the encoded PowerShell decoded |
+| ![MITRE](docs/mitre.png) **ATT&CK matrix**, coloured by worst severity | ![Timeline](docs/timeline.png) **Timeline**: search, filter, expand any event's raw fields |
+| ![Entities](docs/entities.png) **Accounts, hosts and IPs**: who failed, who got in | ![Kerberoasting](docs/kerberoast.png) **Kerberoasting and AS-REP roasting** on a domain controller |
+| ![Clean](docs/clean.png) **A normal workday** stays at 0/100: no false alarms | ![Light](docs/light.png) **Light theme** |
 
 ## Use it
 
